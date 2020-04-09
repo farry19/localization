@@ -1,6 +1,6 @@
 <template>
 	<div class="border rounded rounded-md">
-		<Tabs :languages="languages" />
+		<Tabs v-model="languagesData" />
 	</div>
 </template>
 
@@ -12,6 +12,24 @@
 		components: {
 			Tabs
 		},
+		data() {
+			return {
+				languagesData: this.languages
+			}
+		},
+		watch: {
+			languagesData: {
+				handler(languages) {
+					axios.post(`http://trans.local/languages`, {
+						body: this.languagesData
+					}).then(res => {
+						console.log(res)
+					})
+				},
+				deep: true,
+				// immidiate: true
+			}
+		}
 		// mounted() {
 		// 	axios.get('http://trans.local/languages')
 		// 	.then(({data}) => {

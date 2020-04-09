@@ -14,7 +14,6 @@ class CreatePairsTable extends Migration
     public function up()
     {
         Schema::create('pairs', function (Blueprint $table) {
-            $table->id();
             $table->string('key');
             $table->string('value');
             $table->unsignedBigInteger('language_id');

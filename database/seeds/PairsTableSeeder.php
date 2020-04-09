@@ -25,7 +25,13 @@ class PairsTableSeeder extends Seeder
         		'key'	=> 'sign_up',
         		'value'	=> 'سائن اپ کریں',
         		'language_id'	=> $language->id
-        	]
+        	],
+            [
+                'key'   => 'reset_password',
+                'value' => 'پاس ورڈ دوبارہ ترتیب دیں',
+                'language_id'   => $language->id
+            ]
+
         ]);
 
         $language = Language::where(['short_name' => 'en'])->first();

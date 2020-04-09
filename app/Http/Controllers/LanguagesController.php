@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Pair;
 use App\Language;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,41 @@ class LanguagesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $languages = [];
+
+        foreach ($request->body as $language) {
+            if($language['id']) {
+                $languages[] = Language::find($language['id']);   
+            } else {
+                $languages[] = new Language;
+            }
+
+            end($languages)->name           = $language['name'];
+            end($languages)->short_name     = $language['short_name'];
+            end($languages)->text_direction = $language['text_direction'];
+            end($languages)->text_align     = $language['text_align'];
+            end($languages)->flex_direction = $language['flex_direction'];
+
+            end($languages)->save();
+            
+            $pairs = [];
+            foreach ($language['pairs'] as $pair) {
+                $pairs[] = new Pair;
+
+                end($pairs)['key']          = $pair['key'];
+                end($pairs)['value']        = $pair['value'];
+                end($pairs)['language_id']  = end($languages)->id;
+
+            }
+
+            end($languages)->pairs()->delete();
+            end($languages)->pairs()->saveMany($pairs);
+
+        }
+
+        return response()->json([
+            'languages' => $languages
+        ]);
     }
 
     /**

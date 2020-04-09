@@ -71,6 +71,7 @@
 						<div class="col-sm-12 text-right" style="margin: 10px 0; padding: 0;">
 							<button
 								@click="updateLanguages"
+								:disabled="!validateLanguages"
 								class="btn btn-success btn-sm">
 								Update
 							</button>
@@ -139,10 +140,10 @@
 
 <script>
 	export default {
-		props: ['languages'],
+		props: ['value'],
 		data() {
 			return {
-				more: this.languages,
+				more: JSON.parse(JSON.stringify(this.value)),
 				currentIndex: 0,
 				action: null
 			}
@@ -178,21 +179,41 @@
 
 			},
 			addPair(index) {
-				this.more[index].pairs.unshift({
-					key: '',
-					value: ''
-				})
+				const pair = {key: '', value: ''}
+
+				this.more[index].pairs.unshift(pair)
 			},
 			removePair(index, pindex) {
 				this.more[index].pairs.splice(pindex, 1)
 			},
 			updateLanguages() {
-				// update api call
+				this.$emit('input', this.more)
+			}
+		},
+		computed: {
+			validateLanguages: function() {
+				let valid = true
+
+				this.more.forEach(language => {
+					language.pairs.forEach(pair => {
+						 if((pair.key == '' || pair.value == '') || language.name == '') {
+						 	valid = false
+						 	return
+						 }
+					})
+
+					// return language.name && language.pairs.filter(pair => {
+					// 	return pair.key != '' && pair.value != ''
+					// }) 
+				})
+
+				return valid
+
 			}
 		},
 		watch: {
-			languages: function(newVal) {
-				this.more = newVal
+			value: function(newVal) {
+				this.more = JSON.parse(JSON.stringify(newVal))
 
 				_.each(this.more, (m, index) => {
 					if(!m.pairs.length) {

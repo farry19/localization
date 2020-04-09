@@ -1920,6 +1920,24 @@ __webpack_require__.r(__webpack_exports__);
   props: ['languages'],
   components: {
     Tabs: _TabsComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      languagesData: this.languages
+    };
+  },
+  watch: {
+    languagesData: {
+      handler: function handler(languages) {
+        axios.post("http://trans.local/languages", {
+          body: this.languagesData
+        }).then(function (res) {
+          console.log(res);
+        });
+      },
+      deep: true // immidiate: true
+
+    }
   } // mounted() {
   // 	axios.get('http://trans.local/languages')
   // 	.then(({data}) => {
@@ -2079,11 +2097,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['languages'],
+  props: ['value'],
   data: function data() {
     return {
-      more: this.languages,
+      more: JSON.parse(JSON.stringify(this.value)),
       currentIndex: 0,
       action: null
     };
@@ -2115,22 +2134,40 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     addPair: function addPair(index) {
-      this.more[index].pairs.unshift({
+      var pair = {
         key: '',
         value: ''
-      });
+      };
+      this.more[index].pairs.unshift(pair);
     },
     removePair: function removePair(index, pindex) {
       this.more[index].pairs.splice(pindex, 1);
     },
-    updateLanguages: function updateLanguages() {// update api call
+    updateLanguages: function updateLanguages() {
+      this.$emit('input', this.more);
+    }
+  },
+  computed: {
+    validateLanguages: function validateLanguages() {
+      var valid = true;
+      this.more.forEach(function (language) {
+        language.pairs.forEach(function (pair) {
+          if (pair.key == '' || pair.value == '' || language.name == '') {
+            valid = false;
+            return;
+          }
+        }); // return language.name && language.pairs.filter(pair => {
+        // 	return pair.key != '' && pair.value != ''
+        // }) 
+      });
+      return valid;
     }
   },
   watch: {
-    languages: function languages(newVal) {
+    value: function value(newVal) {
       var _this = this;
 
-      this.more = newVal;
+      this.more = JSON.parse(JSON.stringify(newVal));
 
       _.each(this.more, function (m, index) {
         if (!m.pairs.length) {
@@ -38147,7 +38184,17 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "border rounded rounded-md" },
-    [_c("Tabs", { attrs: { languages: _vm.languages } })],
+    [
+      _c("Tabs", {
+        model: {
+          value: _vm.languagesData,
+          callback: function($$v) {
+            _vm.languagesData = $$v
+          },
+          expression: "languagesData"
+        }
+      })
+    ],
     1
   )
 }
@@ -38413,6 +38460,7 @@ var render = function() {
                               "button",
                               {
                                 staticClass: "btn btn-success btn-sm",
+                                attrs: { disabled: !_vm.validateLanguages },
                                 on: { click: _vm.updateLanguages }
                               },
                               [_vm._v("\n\t\t\t\t\t\t\tUpdate\n\t\t\t\t\t\t")]

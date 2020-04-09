@@ -2,9 +2,7 @@
 
 namespace App;
 
-
 use App\Pair;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Language extends Model
