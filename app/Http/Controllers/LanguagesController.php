@@ -45,13 +45,14 @@ class LanguagesController extends Controller
     {
         $languages = [];
 
-        foreach ($request->body as $language) {
-            if($language['id']) {
-                $languages[] = Language::find($language['id']);   
-            } else {
-                $languages[] = new Language;
-            }
+        Language::get()->each(function($language) {
+            $language->pairs()->delete();
+            $language->delete();
+        });
 
+        foreach ($request->body as $language) {
+            $languages[] = new Language;
+            
             end($languages)->name           = $language['name'];
             end($languages)->short_name     = $language['short_name'];
             end($languages)->text_direction = $language['text_direction'];
@@ -70,9 +71,7 @@ class LanguagesController extends Controller
 
             }
 
-            end($languages)->pairs()->delete();
             end($languages)->pairs()->saveMany($pairs);
-
         }
 
         return response()->json([
@@ -122,6 +121,12 @@ class LanguagesController extends Controller
      */
     public function destroy(Language $language)
     {
-        //
+        $language->pairs()->delete();
+        $language->delete();
+
+        return response()->json([
+            'status'    => true,
+            'msg'       => 'Language Deleted successfully'
+        ]);
     }
 }
