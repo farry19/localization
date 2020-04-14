@@ -201,10 +201,6 @@
 						 	return
 						 }
 					})
-
-					// return language.name && language.pairs.filter(pair => {
-					// 	return pair.key != '' && pair.value != ''
-					// }) 
 				})
 
 				return valid

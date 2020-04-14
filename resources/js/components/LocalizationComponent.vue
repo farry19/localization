@@ -30,11 +30,5 @@
 				// immidiate: true
 			}
 		}
-		// mounted() {
-		// 	axios.get('http://trans.local/languages')
-		// 	.then(({data}) => {
-		// 		this.languages = data.languages
-		// 	})
-		// }
 	}
 </script>
