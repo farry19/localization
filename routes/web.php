@@ -19,3 +19,6 @@ Route::get('/', function () {
 
 Route::resource('/newsitems', 'NewsItemsController');
 Route::resource('/languages', 'LanguagesController');
+
+Route::get('/order', 'OrdersController@create')->name('create_order');
+Route::post('/order', 'OrdersController@store')->name('store_order');

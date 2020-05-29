@@ -1938,13 +1938,7 @@ __webpack_require__.r(__webpack_exports__);
       deep: true // immidiate: true
 
     }
-  } // mounted() {
-  // 	axios.get('http://trans.local/languages')
-  // 	.then(({data}) => {
-  // 		this.languages = data.languages
-  // 	})
-  // }
-
+  }
 });
 
 /***/ }),
@@ -2156,9 +2150,7 @@ __webpack_require__.r(__webpack_exports__);
             valid = false;
             return;
           }
-        }); // return language.name && language.pairs.filter(pair => {
-        // 	return pair.key != '' && pair.value != ''
-        // }) 
+        });
       });
       return valid;
     }
